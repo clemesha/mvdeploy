@@ -22,13 +22,41 @@ Setup
 
 4) Move 'config_template.py' to 'config.py' and fill in values.
 
-5) Run: 
-    $ fab deploy
+
+
+
+Deploying to AWS
+----------------
+
+1) Start up a EC2 instance: 
+    $ fab provision
+
+2) Install dependancies and app into instance:
+    $ fab bootstrap:host='the-hostname-returned-from-provision'
+
 
 
 
 
 Components
 ----------
-
     - 'config.py' contains AWS credentials and deployment specific configuration.
+
+
+
+
+
+Notes
+------
+
+Chef cookbooks:
+    - https://github.com/opscode/cookbooks
+    - https://github.com/37signals/37s_cookbooks
+
+
+Serving rails with Nginx+Passenger:
+    - http://stackoverflow.com/questions/1420183/should-i-user-apache-or-nginx-passenger-or-mongrel-for-my-rails-application
+    - http://stackoverflow.com/questions/1138585/should-i-use-passenger-on-apache-or-nginx
+
+Chef + rails tutorial:
+    - http://akitaonrails.com/2010/02/20/cooking-solo-with-chef

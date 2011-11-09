@@ -6,7 +6,6 @@ import boto
 
 
 def run_instance(access_key, secret_key, ami_id, key_name, instance_type="t1.micro", placement="us-east-1a", timeout=500, cntstep=5):
-    print access_key, secret_key
     print "Running instance_type='%s' with ami_id='%s' using key_name='%s'..." % (instance_type, ami_id, key_name)
     conn = boto.connect_ec2(access_key, secret_key)
     instances = conn.run_instances(ami_id, instance_type=instance_type, key_name=key_name, placement=placement)

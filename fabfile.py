@@ -3,7 +3,7 @@ import sys
 import glob
 import datetime
 import boto
-from fabric.api import env, run, local, put, cd
+from fabric.api import env, run, local, put, cd, sudo
 from fabric.contrib import files
 
 #local code:
@@ -13,15 +13,6 @@ import ec2provision
 
 env.user = config.ENV_USER 
 env.key_filename = config.KEY_FILENAME
-
-
-def bootstrap(target="testing"): 
-    """
-    'target' will be one of: {'testing', 'staging', 'production'}.
-    """
-    run("sudo apt-get -q update")
-    run("sudo adduser --gecos GECOS --disabled-password %s" % config.APP_USER)
-    run("sudo chef-solo -l debug -c /tmp/config.rb -j /tmp/attrs.rb")
 
 
 def _provision_instance():
@@ -34,11 +25,39 @@ def _provision_instance():
     return prov_host.dns_name
 
 
-def deploy():
-    """ Deploy app to AWS."""
+def provision():
+    """Deploy app to AWS."""
     provisioned_host = _provision_instance()
-    print "Deploying to '%s' ... bootstraping backend...\n" % (provisioned_host, )
-    env.user, env.host_string = config.ENV_USER, provisioned_host #set 'host_string' to EC2 host.
-    print "Success.  Host=> %s " % (provisioned_host,)
+    print "Success. Hostname: %s " % (provisioned_host,)
 
 
+def bootstrap(): 
+    """ 
+    Install Chef, then install all Chef cookbooks.
+    """
+    sudo("apt-get -q update")
+    sudo("adduser --gecos GECOS --disabled-password %s" % config.APP_USER)
+    install_chef()
+    setup_chef_env()
+    sudo("chef-solo -l debug -c %(root_dir)s/chef_config.rb -j %(root_dir)s/chef_attrs.rb" % {"root_dir":config.CHEF_RESOURCES_ROOT})
+
+
+def install_chef():
+    """Get a recent version of Chef"""
+    sudo('echo "deb http://apt.opscode.com/ `lsb_release -cs`-0.10 main" | sudo tee /etc/apt/sources.list.d/opscode.list')
+    sudo('sudo mkdir -p /etc/apt/trusted.gpg.d')
+    sudo('gpg --keyserver keys.gnupg.net --recv-keys 83EF826A')
+    sudo('gpg --export packages@opscode.com | sudo tee /etc/apt/trusted.gpg.d/opscode-keyring.gpg > /dev/null')
+    sudo("apt-get update")
+    sudo("apt-get -y install chef")
+
+def setup_chef_env():
+    root_dir = config.CHEF_RESOURCES_ROOT
+    sudo("mkdir -p %(root_dir)s/cookbooks" % {"root_dir":root_dir})
+    put("chef_config.rb", "/tmp/chef_config.rb")
+    sudo("mv /tmp/chef_config.rb %(root_dir)s/" % {"root_dir":root_dir})
+    put("chef_attrs.rb", "/tmp/chef_attrs.rb")
+    sudo("mv /tmp/chef_attrs.rb %(root_dir)s/" % {"root_dir":root_dir})
+    put("cookbooks.tar.gz", "/tmp/cookbooks.tar.gz")
+    sudo("mv /tmp/cookbooks.tar.gz %(root_dir)s/" % {"root_dir":root_dir}) 
+    sudo("cd %(root_dir)s/ && tar -zxf cookbooks.tar.gz" % {"root_dir":root_dir})
