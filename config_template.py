@@ -18,3 +18,4 @@ EC2_ZONE = "us-east-1a"
 # MOST LIKELY ACCEPTABLE DEFAULTS:
 APP_USER = "app"
 ENV_USER = "ubuntu" #Ubuntu 10.04 and up
+CHEF_RESOURCES_ROOT = "/opt/chef"
