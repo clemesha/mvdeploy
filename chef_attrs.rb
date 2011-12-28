@@ -1,3 +1,3 @@
 {
-    "recipes":["mysql::server", "memcached", "nginx"]
+    "recipes":["mysql::server", "memcached", "git"]
 }

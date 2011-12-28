@@ -51,6 +51,7 @@ def install_chef():
     sudo("apt-get update")
     sudo("apt-get -y install chef")
 
+
 def setup_chef_env():
     root_dir = config.CHEF_RESOURCES_ROOT
     sudo("mkdir -p %(root_dir)s/cookbooks" % {"root_dir":root_dir})
@@ -58,6 +59,8 @@ def setup_chef_env():
     sudo("mv /tmp/chef_config.rb %(root_dir)s/" % {"root_dir":root_dir})
     put("chef_attrs.rb", "/tmp/chef_attrs.rb")
     sudo("mv /tmp/chef_attrs.rb %(root_dir)s/" % {"root_dir":root_dir})
+    local("tar -cf cookbooks.tar cookbooks && gzip cookbooks.tar")
     put("cookbooks.tar.gz", "/tmp/cookbooks.tar.gz")
+    local("rm cookbooks.tar.gz")
     sudo("mv /tmp/cookbooks.tar.gz %(root_dir)s/" % {"root_dir":root_dir}) 
     sudo("cd %(root_dir)s/ && tar -zxf cookbooks.tar.gz" % {"root_dir":root_dir})
