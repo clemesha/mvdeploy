@@ -1,0 +1,8 @@
+production:
+  adapter: mysql2
+  database: <%= @node[:ringsail][:production_database] %>
+  encoding: utf8
+  collation: utf8_unicode_ci
+  host: localhost
+  username: root
+  password: {password from /etc/mysql/mysql_grants.sql}

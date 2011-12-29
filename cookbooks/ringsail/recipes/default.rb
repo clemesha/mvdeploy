@@ -8,6 +8,19 @@ bash "install_ringsail" do
   EOH
 end
 
+template "/var/www/ringsail/config/database.yml" do
+  source "database.yml.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
+template "/var/www/ringsail/config/too_many_secrets.rb" do
+  source "too_many_secrets.rb.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
 
 bash "rails_init" do
   cwd "/var/www/ringsail"
@@ -15,9 +28,6 @@ bash "rails_init" do
     sudo gem install bundler
     sudo gem install rake
     bundle install --deployment --without development test
-    cp /tmp/database.yml /var/www/ringsail/config/database.yml
-    cp /tmp/too_many_secrets.rb /var/www/ringsail/config/too_many_secrets.rb
-
     bundle exec rake db:create RAILS_ENV="production"
     bundle exec rake db:schema:load RAILS_ENV="production"
     bundle exec rake db:populate RAILS_ENV="production"
