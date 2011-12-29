@@ -22,6 +22,8 @@ Setup
 
 4) Move 'config_template.py' to 'config.py' and fill in values.
 
+5) Move 'chef_attrs_template.rb' to 'chef_attrs.rb' and fill in values.
+
 
 
 
