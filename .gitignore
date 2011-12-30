@@ -1,5 +1,6 @@
 *.pyc
 chef_attrs.rb
 config.py
+bundle/config.py
 venv/*
 cookbooks.tar.gz

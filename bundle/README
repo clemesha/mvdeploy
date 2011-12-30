@@ -1,0 +1,5 @@
+0) Copy config_template.py to config.py and fill in values.
+
+1) Start a base AMI using the AWS web interface, or some other method.
+
+2) Run: fab bundle:host='the-hostname-from-step-1'
