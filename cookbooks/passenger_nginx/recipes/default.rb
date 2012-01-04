@@ -1,15 +1,18 @@
 bash "install_passenger_nginx" do
   code <<-EOH
-    sudo apt-add-repository ppa:brightbox/passenger-nginx
-    sudo apt-get update
-    sudo apt-get -y install nginx-full
+    apt-add-repository ppa:brightbox/passenger-nginx
+    apt-get update
+    apt-get -y install nginx-full
   EOH
 end
 
 bash "install_passenger" do
   code <<-EOH
-    sudo gem install passenger
-    sudo passenger-status
+    gem install passenger
+    /etc/init.d/nginx start
+    passenger-status
+    /etc/init.d/nginx stop
+    /etc/init.d/nginx start
   EOH
 end
 
