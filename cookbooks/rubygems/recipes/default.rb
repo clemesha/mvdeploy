@@ -1,8 +1,8 @@
 
-template "/home/ubuntu/.gemrc" do
+template "/etc/gemrc" do
   source "gemrc.erb"
-  owner "ubuntu"
-  group "ubuntu"
+  owner "root"
+  group "root"
   mode "0644"
 end
 

@@ -12,7 +12,6 @@ bash "install_passenger" do
     /etc/init.d/nginx start
     passenger-status
     /etc/init.d/nginx stop
-    /etc/init.d/nginx start
   EOH
 end
 

@@ -38,7 +38,7 @@ end
 
 bash "start_nginx" do
   code <<-EOH
-    sudo /etc/init.d/nginx start
+    /etc/init.d/nginx start
   EOH
 end
 

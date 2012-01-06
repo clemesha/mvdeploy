@@ -5,4 +5,4 @@ production:
   collation: utf8_unicode_ci
   host: localhost
   username: root
-  password: {password from /etc/mysql/mysql_grants.sql}
+  password: <%= @node[:mysql][:server_root_password] %>

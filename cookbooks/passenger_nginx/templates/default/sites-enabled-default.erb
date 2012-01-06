@@ -1,6 +1,6 @@
 server {
   listen       80;
-  server_name  ringsail.measuredvoice.com;
+  server_name  <%= @node[:ringsail][:ringsail_host] %>
 
   root   /var/www/ringsail/public;
   passenger_enabled on;

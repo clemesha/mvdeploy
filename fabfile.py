@@ -26,15 +26,13 @@ def _provision_instance():
 
 
 def provision():
-    """Deploy app to AWS."""
+    """Start an EC2 instance, to be used in 'bootstrap' step."""
     provisioned_host = _provision_instance()
     print "Success. Hostname: %s " % (provisioned_host,)
 
 
 def bootstrap(): 
-    """ 
-    Install Chef, then install all Chef cookbooks.
-    """
+    """Install Chef, then install and run cookbooks."""
     sudo("apt-get -q update")
     sudo("adduser --gecos GECOS --disabled-password %s" % config.APP_USER)
     install_chef()
@@ -43,7 +41,7 @@ def bootstrap():
 
 
 def install_chef():
-    """Get a recent version of Chef"""
+    """Install a recent version of Chef on remote instance."""
     sudo('echo "deb http://apt.opscode.com/ `lsb_release -cs`-0.10 main" | sudo tee /etc/apt/sources.list.d/opscode.list')
     sudo('sudo mkdir -p /etc/apt/trusted.gpg.d')
     sudo('gpg --keyserver keys.gnupg.net --recv-keys 83EF826A')
@@ -53,6 +51,7 @@ def install_chef():
 
 
 def setup_chef_env():
+    """Put Chef cookbooks and config files on remote instance."""
     root_dir = config.CHEF_RESOURCES_ROOT
     sudo("mkdir -p %(root_dir)s/cookbooks" % {"root_dir":root_dir})
     put("chef_config.rb", "/tmp/chef_config.rb")
